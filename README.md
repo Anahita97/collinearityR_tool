@@ -1,1 +1,0 @@
-# collinearityR_tool
