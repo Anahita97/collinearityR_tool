@@ -1,16 +1,25 @@
 Package: collinearityR
-Title: What the Package Does (One Line, Title Case)
+Title: Identify Multicollinearity Issues
 Version: 0.0.0.9000
 Authors@R: 
-    person(given = "First",
-           family = "Last",
+    c(person(given = "Anahita",
+           family = "Einolghozati",
            role = c("aut", "cre"),
-           email = "first.last@example.com",
-           comment = c(ORCID = "YOUR-ORCID-ID"))
-Description: What the package does (one paragraph).
-License: `use_mit_license()`, `use_gpl3_license()` or friends to pick a
-    license
+           email = "anahitaainy@gmail.com"),
+    person(given = "Chaoran",
+           family = "Wang",
+           role = "aut"),
+    person(given = "Katia",
+           family = "Aristova",
+           role = "aut"),
+    person(given = "Lisheng",
+           family = "Mao",
+           role = "aut"))
+Description: Identify multicollinearity issues by correlation, VIF, and visualizations.
+License: MIT + file LICENSE
 Encoding: UTF-8
-LazyData: true
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.1.2
+Suggests: 
+    testthat (>= 3.0.0)
+Config/testthat/edition: 3
