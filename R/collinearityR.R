@@ -9,6 +9,7 @@ corr_heatmap <- function(df){
   #' 
   #' @usage corr_heatmap(df)
   #' @return The heatmap.
+  #' @export
   #' @details The inputs must be a 2-D data frame
   #' @examples
   #' corr_heatmap(data)
