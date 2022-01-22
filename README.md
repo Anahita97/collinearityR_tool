@@ -16,6 +16,19 @@ The following four functions are in the collinearityR package:
 - `vif_bar_plot`: A function that returns a list containing a data frame for Variable Inflation Factors (VIF) and a bar chart of the VIFs for each explanatory variable in a multiple linear regression model.
 - `col_identify`: A function that identifies multicollinearity based on highly correlated pairs (using Pearson coefficient) with VIF values exceeding the threshold.
 
+## R ecosystem
+
+The R ecosystem contains many tools necessary to conduct linear regression. However, it does not have tools to analyze multicollinearity visually using both Pearson's coefficient and VIF. This process also requires intermediate knowledge of R to manipulate the correlation matrix into a more suitable format. Our package will allow users with less experience to conduct this analysis.
+
+`cor()`: This function is part of base `r`. It creates a correlation matrix between variables using Pearson's coefficient. Documentation for [cor()]("https://www.rdocumentation.org/packages/stats/versions/3.6.2/topics/cor") can be accessed here.
+
+`ggplot`: This is one of the most commonly used plotting packages. The collinearityR package relies on `ggplot` to create heatmap plots.
+
+`car`: The car package is necessary to do VIF calculations. More documentation on `VIF` function can be found [here]("https://www.rdocumentation.org/packages/regclass/versions/1.6/topics/VIF").
+
+Identify multicollinearity issues by correlation, VIF, and visualizations. This package is designed for beginners of R who want to identify multicollinearity issues by applying a simple function. It automates the process of building a longer form of correlation matrix, creating correlation heat map and identifying pairwise highly correlated variables. A python version of package is also in the progress of development.
+
+
 ## Installation
 
 You can install the released version of collinearityR from
