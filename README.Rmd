@@ -20,6 +20,10 @@ knitr::opts_chunk$set(
 
 The goal of collinearityR is to identify multicollinearity issues by correlation, VIF, and visualizations.
 
+### R ecosystem
+
+The R ecosystem contains many tools necessary to conduct linear regression. However, it does not have tools to analyze multicollinearity visually using both Pearson's coefficient and VIF. This process also requires intermediate knowledge of R to manipulate the correlation matrix into a more suitable format. Our package will allow users with less experience to conduct this analysis.
+
 ## Installation
 
 You can install the released version of collinearityR from [CRAN](https://CRAN.R-project.org) with:
