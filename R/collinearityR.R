@@ -7,6 +7,6 @@
 #' that can be passed to other functions in this package
 #'
 #' @examples
-#' corr_matrix(tibble(x = 1:5, y = 2:6))
+#' corr_longer(tibble(x = 1:5, y = 2:6))
 
-corr_matrix <- function(df, decimals = 2) {}
+corr_longer <- function(df, decimals = 2) {}
