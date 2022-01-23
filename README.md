@@ -26,8 +26,6 @@ The R ecosystem contains many tools necessary to conduct linear regression. Howe
 
 `car`: The car package is necessary to do VIF calculations. More documentation on `VIF` function can be found [here]("https://www.rdocumentation.org/packages/regclass/versions/1.6/topics/VIF").
 
-Identify multicollinearity issues by correlation, VIF, and visualizations. This package is designed for beginners of R who want to identify multicollinearity issues by applying a simple function. It automates the process of building a longer form of correlation matrix, creating correlation heat map and identifying pairwise highly correlated variables. A python version of package is also in the progress of development.
-
 
 ## Installation
 
