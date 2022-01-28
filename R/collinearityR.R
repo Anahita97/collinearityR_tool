@@ -62,4 +62,42 @@ vif_bar_plot <- function(x, y, df, thresh){
 #' @export
 #' @examples
 #' col_identify(df, 0.9, 5)
-col_identify <- function(diff, corr_min = -0.8, corr_max = 0.8, vif_limit = 4){}
+col_identify <- function(
+    df, x, y, corr_min = -0.8, corr_max = 0.8, vif_limit = 4) {
+
+    # df <- df |>
+    #     select(all_of(y), all_of(x))
+    # input_corr <- corr_matrix(df)[1]
+    input_corr <- df |>
+        filter(
+            correlation <= corr_min |
+            correlation >= corr_max &
+            variable1 != variable2)
+
+    pair_maker <- function(x, y) {
+    list_vector <- c(x, y) |>
+        str_sort()
+    list_vector
+    }
+
+    input_corr$pair <- map2(input_corr$variable1,
+                            input_corr$variable2,
+                            pair_maker)
+    
+    # vif_output <- vif_bar_plot(X, y, df, 3)[0]
+    vif_output <- vif_df |>
+        rename(variable1 = explanatory_var)
+    results_df <- inner_join(input_corr, vif_output) |>
+        arrange(desc(pair)) |>
+        select(-variable2) |>
+        rename(variable = variable1) |>
+        mutate(
+        type = case_when(
+            vif_score >= 4  ~ "Yes",
+            TRUE ~  "No"
+        ))
+    
+    results_df
+
+}
+
