@@ -25,5 +25,5 @@ corr_matrix <- function(df, decimals = 2) {
         rownames_to_column("var1") |>
         pivot_longer(-var1, names_to = "var2", values_to = "corr")
     
-    result <-  list(corr_matrix, corr_matrix_longer)
+    result <-  list(corr_matrix_longer, corr_matrix)
 }
