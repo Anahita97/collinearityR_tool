@@ -13,12 +13,13 @@ corr_matrix(df, decimals = 2)
 \item{decimals}{int, the number of decimals}
 }
 \value{
-a generic correlation matrix and its longer form that can be passed to other functions in this package.
+a generic correlation matrix and its longer form
+that can be passed to other functions in this package
 }
 \description{
 Calculate the Pearson correlation coefficients for all numeric variables.
 Round the outcome to desired decimals.
 }
 \examples{
-corr_matrix(tibble::tibble(x = 1:5, y = 2:6))
+corr_matrix(tibble(x = 1:5, y = 2:6))
 }
