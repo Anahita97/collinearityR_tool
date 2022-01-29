@@ -1,3 +1,5 @@
+# tests for corr_matrix function
+
 data_1 <-  data.frame('A'=c(1,2,3,4,5),
                 'B'=c(2,4,6,8,10),
                 'C'=c(10,8,6,4,2),

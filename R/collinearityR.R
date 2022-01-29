@@ -11,16 +11,13 @@
 #' @examples
 #' corr_matrix(tibble(x = 1:5, y = 2:6))
 
-library(tidyverse)
-library(assertthat)
-
 corr_matrix <- function(df, decimals = 2) {
     
-    assert_that(is.data.frame(df), msg = "The input must be a data frame.")
-    assert_that(decimals %% 1 == 0, msg = "The input decimals must be a positive integer.")
-    assert_that(decimals > 0, msg = "The input decimals must be a positive integer.")
-    assert_that(length(select_if(df, is.numeric)) != 0, msg = "The input data frame must contain at least one numeric column.")
-    assert_that(nrow(df) > 1, msg = "The input dataframe should contain at least two observations.")
+    assertthat::assert_that(is.data.frame(df), msg = "The input must be a data frame.")
+    assertthat::assert_that(decimals %% 1 == 0, msg = "The input decimals must be a positive integer.")
+    assertthat::assert_that(decimals > 0, msg = "The input decimals must be a positive integer.")
+    assertthat::assert_that(length(select_if(df, is.numeric)) != 0, msg = "The input data frame must contain at least one numeric column.")
+    assertthat::assert_that(nrow(df) > 1, msg = "The input dataframe should contain at least two observations.")
     
     corr_matrix <- df |> 
         select_if(is.numeric) |> 
