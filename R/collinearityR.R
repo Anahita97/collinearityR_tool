@@ -5,11 +5,11 @@
 #'
 #' @param decimals int, the number of decimals
 #'
-#' @return a generic correlation matrix and its longer form
-#' that can be passed to other functions in this package
+#' @return a generic correlation matrix and its longer form that can be passed to other functions in this package.
+#' @export
 #'
 #' @examples
-#' corr_matrix(tibble(x = 1:5, y = 2:6))
+#' corr_matrix(tibble::tibble(x = 1:5, y = 2:6))
 
 corr_matrix <- function(df, decimals = 2) {
     
@@ -31,15 +31,15 @@ corr_matrix <- function(df, decimals = 2) {
         stop("The input dataframe should contain at least two observations.")
     }
     
-    corr_matrix <- df |> 
+    corr_matrix_generic <- df |> 
         dplyr::select_if(is.numeric) |> 
         stats::cor(method = "pearson")
 
-    corr_matrix_longer <- corr_matrix |> 
+    corr_matrix_longer <- corr_matrix_generic |> 
         as.data.frame() |> 
         tibble::rownames_to_column("variable1") |>
         tidyr::pivot_longer(-variable1, names_to = "variable2", values_to = "correlation")|> 
         dplyr::mutate(rounded_corr = round(correlation, digits = decimals))
     
-    result <-  list(corr_matrix_longer, corr_matrix)
+    result <- list(corr_matrix_longer, corr_matrix_generic)
 }
