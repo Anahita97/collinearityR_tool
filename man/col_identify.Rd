@@ -28,3 +28,7 @@ This function returns a DataFrame containing Pearson's coefficient,
 VIFF with explanatory variables suggested for elimination.
 An empty dataframe means no multicollinearity detected.
 }
+\examples{
+col_identify(iris, c("Sepal.Width", "Petal.Length"),
+             "Petal.Width", vif_limit = 0, corr_max = 0.3, corr_min = -0.3)
+}

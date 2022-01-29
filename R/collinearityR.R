@@ -153,9 +153,13 @@ vif_bar_plot <- function(x, y, df, thresh) {
 #' a pair. This is a VIF value. Default set at 4.
 #' @export
 #' @examples
-#' col_identify(iris, c("Sepal.Width", "Petal.Length"), "Petal.Width", vif_limit = 0, corr_max = 0.3, corr_min = -0.3)
+#' col_identify(iris, c("Sepal.Width", "Petal.Length"),
+#'              "Petal.Width", vif_limit = 0, corr_max = 0.3, corr_min = -0.3)
 col_identify <- function(
     df, X, y, corr_min = -0.8, corr_max = 0.8, vif_limit = 4) {
+    
+    variable1 <- variable2 <- correlation <- NULL
+    explanatory_var <- vif_score <- pair <- desc <- NULL
 
     if (!is.character(X)) {
         stop("X must be a vector with character variables")
