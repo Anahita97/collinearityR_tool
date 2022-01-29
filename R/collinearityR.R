@@ -107,7 +107,8 @@ col_identify <- function(
                             pair_maker)
 
     vif_output <- vif_bar_plot(X, y, df, 4)[[1]] |>
-        dplyr::rename(variable1 = explanatory_var)
+        dplyr::rename(variable1 = explanatory_var) |>
+        dplyr::filter(vif_score >= vif_limit)
 
     results_df <- dplyr::inner_join(input_corr, vif_output) |>
         dplyr::arrange(desc(pair)) |>
