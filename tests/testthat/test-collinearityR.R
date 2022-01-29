@@ -26,23 +26,38 @@ result_3 <-  tibble::tibble("A" = c(1, -1),
                             "index" = c("A", "B")
                            )|> tibble::column_to_rownames('index')
 
-
-
-# tests for corr_heatmap function
-
+## output error tests
 test_that("The correlation matrix in its longer form is wrong", {
   expect_equal(corr_matrix(data_1)[[1]], result_1)
 })
-test_that("The number of rows of longer form is wrong", {
-  expect_equal(nrow(corr_matrix(data_1)[[1]]), 9)
-  expect_equal(nrow(corr_matrix(data_2)[[1]]), 1)
-})
-test_that("The longer form should return only one row", {
+
+test_that("The longer form should return only one row for a one numeric data frame", {
   expect_equal(corr_matrix(data_2)[[1]], result_2)
 })
+
 test_that("The generic correlation matrix is wrong", {
   expect_equal(as.data.frame(corr_matrix(data_3)[[2]]), result_3)
 })
+
+
+## dataframe tests
+test_that("The number of rows of output is wrong", {
+  expect_equal(nrow(corr_matrix(data_1)[[1]]), 9)
+  expect_equal(nrow(corr_matrix(data_2)[[1]]), 1)
+  expect_equal(nrow(corr_matrix(data_3)[[2]]), 2)
+})
+
+## input data type tests
+test_that("The input data type is incorrect", {
+  expect_error(corr_matrix(123, 2), "The input must be a data frame.")
+  expect_error(corr_matrix(iris, 2.5), "The input decimals must be a positive integer.")
+  expect_error(corr_matrix(iris, -3), "The input decimals must be a positive integer.")
+  expect_error(corr_matrix(iris|> dplyr::select(Species)), "The input data frame must contain at least one numeric column.")
+  expect_error(corr_matrix(iris[sample(nrow(iris), 1),]), "The input dataframe should contain at least two observations.")
+})
+
+# tests for corr_heatmap function
+
 test_that('Base layer of heatmap should use geom_tile.', {
   expect_true("GeomTile" %in% c(class(corr_heatmap(data_1)$layers[[1]]$geom)))
 })
@@ -127,6 +142,7 @@ test_that("The threshold must be vertical line", {
 })
 test_that("The threshold should be a red line.", {
   expect_true(vif[[2]]$layers[[2]]$aes_params$colour == "red")
+})
 
 
   
@@ -189,5 +205,5 @@ test_that("col_identify should return correct matches", {
     dplyr::mutate(correlation = round(correlation, 4),
                   vif_score = round(vif_score, 4))
 
-  expect_equal(col_output, test_df, ignore_attr = TRUE)})
-  
+  expect_equal(col_output, test_df, ignore_attr = TRUE)
+})

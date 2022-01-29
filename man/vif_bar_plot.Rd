@@ -26,5 +26,5 @@ a bar chart for the VIF scores alongside the specified threshold for each explan
 in a linear regression model.
 }
 \examples{
-vif_bar_plot(c("exp1", "exp2", "exp3"), "response", data, 5)
+vif_bar_plot(c("Sepal.Width", "Sepal.Length"), "Petal.Width", iris, 5)
 }

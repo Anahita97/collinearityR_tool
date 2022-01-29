@@ -21,5 +21,5 @@ corresponding colours.
 The inputs must be a 2-D data frame
 }
 \examples{
-corr_heatmap(data)
+corr_heatmap(mtcars[, c(1,3,4,5,6,7)])
 }
