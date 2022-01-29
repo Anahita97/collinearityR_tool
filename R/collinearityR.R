@@ -1,6 +1,6 @@
 #' Calculate the Pearson correlation coefficients for all numeric variables.
 #' Round the outcome to desired decimals.
-#'    
+#'
 #' @param df tibble, the input dataframe
 #'
 #' @param decimals int, the number of decimals
@@ -44,20 +44,35 @@ corr_matrix <- function(df, decimals = 2) {
 }
 
 #' Plot rectangular data as a color-encoded Pearson correlaiton matrix.
-#' 
-#' @description The rows and the columns contain variable names, while 
-#' the heatmap tiles contain Pearson correlation coefficient and 
+#'
+#' @description The rows and the columns contain variable names, while
+#' the heatmap tiles contain Pearson correlation coefficient and
 #' corresponding colours.
-#' 
+#'
 #' @param df dataframe. 2-D dataframe.
-#' 
+#'
 #' @usage corr_heatmap(df)
 #' @return The heatmap.
 #' @export
 #' @details The inputs must be a 2-D data frame
 #' @examples
-#' corr_heatmap(data)
-corr_heatmap <- function(df){}
+#' corr_heatmap(mtcars[, c(1,3,4,5,6,7)])
+corr_heatmap <- function(df) {
+  corr.matrix <- corr_matrix(df)[[1]]
+  variable1 <- variable2 <- correlation <- NULL
+
+  heatmap <- ggplot2::ggplot(corr.matrix, ggplot2::aes(x = variable1, y = variable2, fill = correlation)) +
+    ggplot2::geom_tile() +
+    ggplot2::geom_text(ggplot2::aes(label = round(correlation, 2))) +
+    ggplot2::scale_fill_gradient2(low = "dodgerblue4", mid = "white", high = "sienna4", midpoint = 0) +
+    ggplot2::theme(
+      axis.title.x = ggplot2::element_blank(),
+      axis.title.y = ggplot2::element_blank(),
+      panel.background = ggplot2::element_blank()
+    )
+
+  return(heatmap)
+}
 
 #' Returns a list containing a dataframe that includes Variance Inflation Factor (VIF) score and
 #' a bar chart for the VIF scores alongside the specified threshold for each explanatory variable
@@ -76,11 +91,11 @@ corr_heatmap <- function(df){}
 vif_bar_plot <- function(x, y, df, thresh){
 }
 
-#' Multicollinearity identification function highly correlated pairs 
+#' Multicollinearity identification function highly correlated pairs
 #' (Pearson coefficient) with VIF values exceeding the threshold.
 
 #' This function returns a DataFrame containing Pearson's coefficient,
-#' VIFF, and the suggestion to eliminate or keep a variable based on 
+#' VIFF, and the suggestion to eliminate or keep a variable based on
 #' VIFF and Pearson's coefficient thresholds.
 #'
 #' @param df An input dataframe
