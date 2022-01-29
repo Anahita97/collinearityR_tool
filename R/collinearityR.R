@@ -16,19 +16,19 @@ corr_matrix <- function(df, decimals = 2) {
     assertthat::assert_that(is.data.frame(df), msg = "The input must be a data frame.")
     assertthat::assert_that(decimals %% 1 == 0, msg = "The input decimals must be a positive integer.")
     assertthat::assert_that(decimals > 0, msg = "The input decimals must be a positive integer.")
-    assertthat::assert_that(length(select_if(df, is.numeric)) != 0, msg = "The input data frame must contain at least one numeric column.")
+    assertthat::assert_that(length(dplyr::select_if(df, is.numeric)) != 0, msg = "The input data frame must contain at least one numeric column.")
     assertthat::assert_that(nrow(df) > 1, msg = "The input dataframe should contain at least two observations.")
     
     corr_matrix <- df |> 
-        select_if(is.numeric) |> 
-        cor(method = "pearson") |> 
-        round(digits = decimals)
+        dplyr::select_if(is.numeric) |> 
+        cor(method = "pearson")
 
 
     corr_matrix_longer <- corr_matrix |> 
         as.data.frame() |> 
-        rownames_to_column("var1") |>
-        pivot_longer(-var1, names_to = "var2", values_to = "corr")
+        tibble::rownames_to_column("variable1") |>
+        tidyr::pivot_longer(-variable1, names_to = "variable2", values_to = "correlation")|> 
+        dplyr::mutate(rounded_corr = round(correlation, digits = decimals))
     
     result <-  list(corr_matrix_longer, corr_matrix)
 }
