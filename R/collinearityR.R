@@ -13,16 +13,27 @@
 
 corr_matrix <- function(df, decimals = 2) {
     
-    assertthat::assert_that(is.data.frame(df), msg = "The input must be a data frame.")
-    assertthat::assert_that(decimals %% 1 == 0, msg = "The input decimals must be a positive integer.")
-    assertthat::assert_that(decimals > 0, msg = "The input decimals must be a positive integer.")
-    assertthat::assert_that(length(dplyr::select_if(df, is.numeric)) != 0, msg = "The input data frame must contain at least one numeric column.")
-    assertthat::assert_that(nrow(df) > 1, msg = "The input dataframe should contain at least two observations.")
+    variable1 <- variable2 <- correlation <- NULL
+    
+    if (!is.data.frame(df)){
+        stop("The input must be a data frame.")
+    }
+    if (!(decimals %% 1 == 0)){
+        stop("The input decimals must be a positive integer.")
+    }
+    if (!(decimals > 0)){
+        stop("The input decimals must be a positive integer.")
+    }
+    if (length(dplyr::select_if(df, is.numeric)) == 0){
+        stop("The input data frame must contain at least one numeric column.")
+    }
+    if (!(nrow(df) > 1)){
+        stop("The input dataframe should contain at least two observations.")
+    }
     
     corr_matrix <- df |> 
         dplyr::select_if(is.numeric) |> 
-        cor(method = "pearson")
-
+        stats::cor(method = "pearson")
 
     corr_matrix_longer <- corr_matrix |> 
         as.data.frame() |> 
