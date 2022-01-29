@@ -50,7 +50,7 @@ test_that("Wrong tibble dimensions.", {
                c(length(c("Sepal.Width", "Sepal.Length")), 2))
 })
 
-## dataframe tests
+## plot tests
 
 test_that("Must be a ggplot bar graph.", {
   expect_true("GeomBar" %in% c(class(vif[[2]]$layers[[1]]$geom)))
