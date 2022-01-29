@@ -49,8 +49,8 @@ vif_bar_plot <- function(x, y, df, thresh){
 #' (Pearson coefficient) with VIF values exceeding the threshold.
 
 #' This function returns a DataFrame containing Pearson's coefficient,
-#' VIFF, and the suggestion to eliminate or keep a variable based on 
-#' VIFF and Pearson's coefficient thresholds.
+#' VIFF with explanatory variables suggested for elimination.
+#' An empty dataframe means no multicollinearity detected.
 #'
 #' @param df An input dataframe
 #' @param corr_min A decimal number that serves as a threshold for selecting
@@ -61,43 +61,65 @@ vif_bar_plot <- function(x, y, df, thresh){
 #' a pair. This is a VIF value. Default set at 4.
 #' @export
 #' @examples
-#' col_identify(df, 0.9, 5)
+#' col_identify(df, X, y)
 col_identify <- function(
-    df, x, y, corr_min = -0.8, corr_max = 0.8, vif_limit = 4) {
+    df, X, y, corr_min = -0.8, corr_max = 0.8, vif_limit = 4) {
 
-    # df <- df |>
-    #     select(all_of(y), all_of(x))
-    # input_corr <- corr_matrix(df)[1]
+    if (!is.character(X)) {
+        stop("X must be a vector with character variables")
+    }
+
+    if (!is.character(y)) {
+        stop("y must be a character vector")
+    }
+
+    if (!is.data.frame(df)) {
+        stop('col_identify df argument expects a dataframe')
+    }
+
+    if (!is.numeric(corr_min)) {
+         stop("corr_min should be numeric")
+    }
+    
+    if (!is.numeric(corr_max)) {
+         stop("corr_max should be numeric")
+    }
+    
+    if (!is.numeric(vif_limit)) {
+         stop("vif_limit should be numeric")
+    }
+
     input_corr <- df |>
+        select(all_of(X))
+
+    input_corr <- corr_matrix(input_corr)[[1]] |>
         filter(
             correlation <= corr_min |
             correlation >= corr_max &
             variable1 != variable2)
 
     pair_maker <- function(x, y) {
-    list_vector <- c(x, y) |>
+        list_vector <- c(x, y) |>
         str_sort()
-    list_vector
-    }
+        list_vector
+        }
 
     input_corr$pair <- map2(input_corr$variable1,
                             input_corr$variable2,
                             pair_maker)
-    
-    # vif_output <- vif_bar_plot(X, y, df, 3)[0]
-    vif_output <- vif_df |>
+
+    vif_output <- vif_bar_plot(X, y, df, 4)[[1]] |>
         rename(variable1 = explanatory_var)
+
     results_df <- inner_join(input_corr, vif_output) |>
         arrange(desc(pair)) |>
         select(-variable2) |>
         rename(variable = variable1) |>
-        mutate(
-        type = case_when(
-            vif_score >= 4  ~ "Yes",
-            TRUE ~  "No"
-        ))
-    
-    results_df
+        group_by(pair) |>
+        top_n(1, vif_score)
 
+    results_df
 }
+
+
 
