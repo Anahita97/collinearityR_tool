@@ -62,6 +62,8 @@ vif_bar_plot <- function(x, y, df, thresh) {
     stop("thresh must be a numeric value!")
   }
 
+  lm <- explanatory_var <- NULL
+
   # Data frame containing VIF scores
   explan_var <- paste(x, collapse = " + ") |>
     noquote()
