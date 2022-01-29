@@ -23,3 +23,10 @@ RoxygenNote: 7.1.2
 Suggests: 
     testthat (>= 3.0.0), dplyr, rlang, tibble, ggplot2, car
 Config/testthat/edition: 3
+Imports: 
+    assertthat,
+    rlang,
+    ggplot2,
+    dplyr,
+    tidyr,
+    tibble
