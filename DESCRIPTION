@@ -24,9 +24,12 @@ Suggests:
     testthat (>= 3.0.0), dplyr, rlang, tibble, ggplot2, car
 Config/testthat/edition: 3
 Imports: 
-    assertthat,
+    tidyselect,
+    stringr,
+    purrr
     rlang,
     ggplot2,
     dplyr,
     tidyr,
-    tibble
+    tibble,
+    car

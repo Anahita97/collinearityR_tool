@@ -1,3 +1,66 @@
+# tests for corr_matrix function
+
+data_1 <-  data.frame('A'=c(1,2,3,4,5),
+                      'B'=c(2,4,6,8,10),
+                      'C'=c(10,8,6,4,2),
+                      "D"=c('abc','322', '324', '32', '23')
+)
+result_1 <-  tibble::tibble("variable1"=c("A","A","A", "B","B","B", "C", "C","C"),
+                            "variable2"=c ("A", "B", "C","A", "B", "C","A", "B", "C"),
+                            "correlation"=c(1.0, 1.0, -1.0, 1.0, 1.0, -1.0, -1.0, -1.0, 1.0),
+                            "rounded_corr" = c(1.0, 1.0, -1.0, 1.0, 1.0, -1.0, -1.0, -1.0, 1.0)
+                           )
+data_2 <- data.frame("A" = c(1, 2),
+                     "B" = c("2", "4")
+                    )
+result_2 <-  tibble::tibble("variable1" = c("A"),
+                            "variable2" = c("A"),
+                            "correlation" = c(1.0),
+                            "rounded_corr" = c(1.0)
+                   )
+data_3 <- data.frame("A" = c(1, 2, 3),
+                     "B" = c(3, 2, 1)
+                    )
+result_3 <-  tibble::tibble("A" = c(1, -1),
+                            "B" = c(-1, 1),
+                            "index" = c("A", "B")
+                           )|> tibble::column_to_rownames('index')
+
+
+
+# tests for corr_heatmap function
+
+test_that("The correlation matrix in its longer form is wrong", {
+  expect_equal(corr_matrix(data_1)[[1]], result_1)
+})
+test_that("The number of rows of longer form is wrong", {
+  expect_equal(nrow(corr_matrix(data_1)[[1]]), 9)
+  expect_equal(nrow(corr_matrix(data_2)[[1]]), 1)
+})
+test_that("The longer form should return only one row", {
+  expect_equal(corr_matrix(data_2)[[1]], result_2)
+})
+test_that("The generic correlation matrix is wrong", {
+  expect_equal(as.data.frame(corr_matrix(data_3)[[2]]), result_3)
+})
+test_that('Base layer of heatmap should use geom_tile.', {
+  expect_true("GeomTile" %in% c(class(corr_heatmap(data_1)$layers[[1]]$geom)))
+})
+test_that('Base layer of heatmap should map correlaiton to fill property.', {
+  expect_true("correlation" == rlang::get_expr(corr_heatmap(data_1)$mapping$fill))
+})
+test_that('The x axis should be mapped to the explanatory variables.', {
+  expect_true("variable1" == rlang::get_expr(corr_heatmap(data_1)$mapping$x))
+})
+test_that('The y axis should be mapped to the explanatory variables.', {
+  expect_true("variable2" == rlang::get_expr(corr_heatmap(data_1)$mapping$y))
+})
+test_that('Text layer of heatmap should use geom_text.', {
+  expect_true("GeomText" %in% c(class(corr_heatmap(data_1)$layers[[2]]$geom)))
+})
+
+
+
 # tests for vif_bar_plot function
 
 vif <- vif_bar_plot(c("Sepal.Width", "Sepal.Length"), "Petal.Width", iris, 5)
@@ -13,7 +76,6 @@ test_that("Wrong input data type.", {
   expect_error(vif_bar_plot(c("Sepal.Width", "Sepal.Length"), "Petal.Width", iris, "5"))
 })
 
-
 ## data types of outputs
 test_that("The output should be a list.", {
   expect_equal(class(vif), "list")
@@ -25,8 +87,8 @@ test_that("The second element of the list should be a ggplot object.", {
   expect_true("ggplot" %in% c(class(vif[[2]])))
 })
 
-
 ## dataframe tests
+  
 test_that("Incorrect results.", {
   expect_equal(vif[[1]] |> dplyr::mutate_if(is.numeric, round, 3),
                vif_df_example,
@@ -66,80 +128,66 @@ test_that("The threshold must be vertical line", {
 test_that("The threshold should be a red line.", {
   expect_true(vif[[2]]$layers[[2]]$aes_params$colour == "red")
 
-# tests for corr_matrix function
 
+  
+# tests for col_identify function
 
-data_1 <-  data.frame('A'=c(1,2,3,4,5),
-                      'B'=c(2,4,6,8,10),
-                      'C'=c(10,8,6,4,2),
-                      "D"=c('abc','322', '324', '32', '23')
+test_that("col_identify should return a datafame", {
+
+    a <- c(1, 2, 9, 10, 10, 9)
+    b <- c(2, 10, 16, 4, 7, 11)
+    c <- c(2, 9, 10, 10, 6, 10)
+    y <- c(5, 11, 100, 1, 1, 6)
+
+    toy <- data.frame(a, b, c, y)
+    toy_x <- c("a", "b", "c")
+    toy_y <- c("y")
+    
+    expect_true("data.frame" %in% c(class(
+      col_identify(toy, toy_x, toy_y, vif_limit = 2, corr_max = 0.65)
+  ))
 )
-
-result_1 <-  tibble::tibble("variable1"=c("A","A","A", "B","B","B", "C", "C","C"),
-                            "variable2"=c ("A", "B", "C","A", "B", "C","A", "B", "C"),
-                            "correlation"=c(1.0, 1.0, -1.0, 1.0, 1.0, -1.0, -1.0, -1.0, 1.0),
-                            "rounded_corr" = c(1.0, 1.0, -1.0, 1.0, 1.0, -1.0, -1.0, -1.0, 1.0)
-                           )
-
-
-data_2 <- data.frame("A" = c(1, 2),
-                     "B" = c("2", "4")
-                    )
-
-result_2 <-  tibble::tibble("variable1" = c("A"),
-                            "variable2" = c("A"),
-                            "correlation" = c(1.0),
-                            "rounded_corr" = c(1.0)
-                   )
-
-data_3 <- data.frame("A" = c(1, 2, 3),
-                     "B" = c(3, 2, 1)
-                    )
-
-result_3 <-  tibble::tibble("A" = c(1, -1),
-                            "B" = c(-1, 1),
-                            "index" = c("A", "B")
-                           )|> tibble::column_to_rownames('index')
-
-# tests for corr_heatmap function
-
-
-test_that("The correlation matrix in its longer form is wrong", {
-  expect_equal(corr_matrix(data_1)[[1]], result_1)
 })
+test_that('function should throw an error if the arguments are the wrong type', {
 
-test_that("The number of rows of longer form is wrong", {
-  expect_equal(nrow(corr_matrix(data_1)[[1]]), 9)
-  expect_equal(nrow(corr_matrix(data_2)[[1]]), 1)
+    fake_df <- c("apples", "bananas")
+    fake_exp <- 100
+    fake_resp <- c(100, 200)
+
+    a <- c(1, 2, 9, 10, 10, 9)
+    b <- c(2, 10, 16, 4, 7, 11)
+    c <- c(2, 9, 10, 10, 6, 10)
+    y <- c(5, 11, 100, 1, 1, 6)
+
+    toy <- data.frame(a, b, c, y)
+    toy_x <- c("a", "b", "c")
+    toy_y <- c("y")
+
+    expect_error(col_identify(fake_df, toy_x, toy_y))
+    expect_error(col_identify(toy, fake_exp, toy_y))
+    expect_error(col_identify(toy, toy_x, fake_resp))
 })
+test_that("col_identify should return correct matches", {
 
-test_that("The longer form should return only one row", {
-  expect_equal(corr_matrix(data_2)[[1]], result_2)
-})
+    variable <- c("c")
+    correlation <- c(0.6573)
+    rounded_corr <- c(0.66)
+    pair <- list(c("b", "c"))
+    vif_score <- c(2.3876)
 
-test_that("The generic correlation matrix is wrong", {
-  expect_equal(as.data.frame(corr_matrix(data_3)[[2]]), result_3)
-})
+    a <- c(1, 2, 9, 10, 10, 9)
+    b <- c(2, 10, 16, 4, 7, 11)
+    c <- c(2, 9, 10, 10, 6, 10)
+    y <- c(5, 11, 100, 1, 1, 6)
 
-test_that('Base layer of heatmap should use geom_tile.', {
-  expect_true("GeomTile" %in% c(class(corr_heatmap(data_1)$layers[[1]]$geom)))
-})
+    toy <- data.frame(a, b, c, y)
+    toy_x <- c("a", "b", "c")
+    toy_y <- c("y")
 
-test_that('Base layer of heatmap should map correlaiton to fill property.', {
-  expect_true("correlation" == rlang::get_expr(corr_heatmap(data_1)$mapping$fill))
-})
+    test_df <- tibble::tibble(variable, correlation, rounded_corr, pair, vif_score)
+    col_output <- col_identify(toy, toy_x, toy_y, vif_limit = 2, corr_max = 0.65) |>
+    dplyr::mutate(correlation = round(correlation, 4),
+                  vif_score = round(vif_score, 4))
 
-test_that('The x axis should be mapped to the explanatory variables.', {
-  expect_true("variable1" == rlang::get_expr(corr_heatmap(data_1)$mapping$x))
-})
-
-test_that('The y axis should be mapped to the explanatory variables.', {
-  expect_true("variable2" == rlang::get_expr(corr_heatmap(data_1)$mapping$y))
-})
-
-test_that('Text layer of heatmap should use geom_text.', {
-  expect_true("GeomText" %in% c(class(corr_heatmap(data_1)$layers[[2]]$geom)))
-})
-
-
-
+  expect_equal(col_output, test_df, ignore_attr = TRUE)})
+  

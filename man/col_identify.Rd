@@ -3,32 +3,28 @@
 \name{col_identify}
 \alias{col_identify}
 \title{Multicollinearity identification function highly correlated pairs
-(Pearson coefficient) with VIF values exceeding the threshold.
-This function returns a DataFrame containing Pearson's coefficient,
-VIFF, and the suggestion to eliminate or keep a variable based on
-VIFF and Pearson's coefficient thresholds.}
+(Pearson coefficient) with VIF values exceeding the threshold.}
 \usage{
-col_identify(diff, corr_min = -0.8, corr_max = 0.8, vif_limit = 4)
+col_identify(df, X, y, corr_min = -0.8, corr_max = 0.8, vif_limit = 4)
 }
 \arguments{
-\item{corr_min}{A decimal number that serves as a threshold for selecting
+\item{df}{An input dataframe}
+
+\item{X}{Explanatory variables (vector of characters)}
+
+\item{y}{Response variable (single vector)}
+
+\item{corr_min}{(optional) A decimal number that serves as a threshold for selecting
 a pair. This is a Pearson coefficient value. Default set at -0.8.}
 
-\item{corr_max}{A decimal number that serves as a threshold for selecting
+\item{corr_max}{(optional) A decimal number that serves as a threshold for selecting
 a pair. This is a Pearson coefficient value. Default set at 0.8.}
 
-\item{vif_limit}{A decimal number that serves as a threshold for selecting
+\item{vif_limit}{(optional) A decimal number that serves as a threshold for selecting
 a pair. This is a VIF value. Default set at 4.}
-
-\item{df}{An input dataframe}
 }
 \description{
-Multicollinearity identification function highly correlated pairs
-(Pearson coefficient) with VIF values exceeding the threshold.
 This function returns a DataFrame containing Pearson's coefficient,
-VIFF, and the suggestion to eliminate or keep a variable based on
-VIFF and Pearson's coefficient thresholds.
-}
-\examples{
-col_identify(df, 0.9, 5)
+VIFF with explanatory variables suggested for elimination.
+An empty dataframe means no multicollinearity detected.
 }

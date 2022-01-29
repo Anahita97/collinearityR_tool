@@ -1,4 +1,3 @@
-
 #' Calculate the Pearson correlation coefficients for all numeric variables.
 #' Round the outcome to desired decimals.
 #'
@@ -43,7 +42,6 @@ corr_matrix <- function(df, decimals = 2) {
     
     result <- list(corr_matrix_longer, corr_matrix_generic)
 }
-
 
 
 #' Plot rectangular data as a color-encoded Pearson correlaiton matrix.
@@ -92,7 +90,7 @@ corr_heatmap <- function(df) {
 #' @export
 #'
 #' @examples
-#' vif_bar_plot(c("exp1", "exp2", "exp3"), "response", data, 5)
+#' vif_bar_plot(c("Sepal.Width", "Sepal.Length"), "Petal.Width", iris, 5)
 vif_bar_plot <- function(x, y, df, thresh) {
 
   if (!is.vector(x)) {
@@ -136,21 +134,84 @@ vif_bar_plot <- function(x, y, df, thresh) {
   list(vif_df, hbar_plot)
 }
 
+
 #' Multicollinearity identification function highly correlated pairs
 #' (Pearson coefficient) with VIF values exceeding the threshold.
-
+#'
 #' This function returns a DataFrame containing Pearson's coefficient,
-#' VIFF, and the suggestion to eliminate or keep a variable based on
-#' VIFF and Pearson's coefficient thresholds.
+#' VIFF with explanatory variables suggested for elimination.
+#' An empty dataframe means no multicollinearity detected.
 #'
 #' @param df An input dataframe
-#' @param corr_min A decimal number that serves as a threshold for selecting
+#' @param X Explanatory variables (vector of characters)
+#' @param y Response variable (single vector)
+#' @param corr_min (optional) A decimal number that serves as a threshold for selecting
 #' a pair. This is a Pearson coefficient value. Default set at -0.8.
-#' @param corr_max A decimal number that serves as a threshold for selecting
+#' @param corr_max (optional) A decimal number that serves as a threshold for selecting
 #' a pair. This is a Pearson coefficient value. Default set at 0.8.
-#' @param vif_limit A decimal number that serves as a threshold for selecting
+#' @param vif_limit (optional) A decimal number that serves as a threshold for selecting
 #' a pair. This is a VIF value. Default set at 4.
 #' @export
 #' @examples
-#' col_identify(df, 0.9, 5)
-col_identify <- function(diff, corr_min = -0.8, corr_max = 0.8, vif_limit = 4){}
+#' col_identify(iris, c("Sepal.Width", "Petal.Length"), "Petal.Width", vif_limit = 0, corr_max = 0.3, corr_min = -0.3)
+col_identify <- function(
+    df, X, y, corr_min = -0.8, corr_max = 0.8, vif_limit = 4) {
+
+    if (!is.character(X)) {
+        stop("X must be a vector with character variables")
+    }
+
+    if (!is.character(y)) {
+        stop("y must be a character vector")
+    }
+
+    if (!is.data.frame(df)) {
+        stop('col_identify df argument expects a dataframe')
+    }
+
+    if (!is.numeric(corr_min)) {
+         stop("corr_min should be numeric")
+    }
+
+    if (!is.numeric(corr_max)) {
+         stop("corr_max should be numeric")
+    }
+
+    if (!is.numeric(vif_limit)) {
+         stop("vif_limit should be numeric")
+    }
+
+    input_corr <- df |>
+        dplyr::select(tidyselect::all_of(X))
+
+    input_corr <- corr_matrix(input_corr)[[1]] |>
+        dplyr::filter(
+            correlation <= corr_min |
+            correlation >= corr_max &
+            variable1 != variable2)
+
+    pair_maker <- function(x, y) {
+        list_vector <- c(x, y) |>
+        stringr::str_sort()
+        list_vector
+        }
+
+    input_corr$pair <- purrr::map2(input_corr$variable1,
+                            input_corr$variable2,
+                            pair_maker)
+
+    vif_output <- vif_bar_plot(X, y, df, 4)[[1]] |>
+        dplyr::rename(variable1 = explanatory_var) |>
+        dplyr::filter(vif_score >= vif_limit)
+
+    results_df <- dplyr::inner_join(input_corr, vif_output) |>
+        dplyr::arrange(desc(pair)) |>
+        dplyr::select(-variable2) |>
+        dplyr::rename(variable = variable1) |>
+        dplyr::group_by(pair) |>
+        dplyr::top_n(1, vif_score)
+
+    results_df
+}
+
+
