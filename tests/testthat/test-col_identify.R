@@ -1,4 +1,4 @@
-testthat::test_that("col_identify should return a datafame", {
+test_that("col_identify should return a datafame", {
 
   mpg <- system.file("extdata", "mpg.csv", package="collinearityR")
   real_df <- read.csv(mpg)
@@ -8,7 +8,7 @@ testthat::test_that("col_identify should return a datafame", {
 })
 
 
-testthat::test_that('function should throw an error if the arguments are the wrong type', {
+test_that('function should throw an error if the arguments are the wrong type', {
 
   fake_df <- c("apples", "bananas")
   fake_exp <- 100
@@ -24,7 +24,7 @@ testthat::test_that('function should throw an error if the arguments are the wro
 })
 
 
-testthat::test_that("col_identify should return correct matches", {
+test_that("col_identify should return correct matches", {
 
   variable <- c("cyl", "cyl")
   correlation <- c(0.9302, -0.8058)
