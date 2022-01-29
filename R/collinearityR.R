@@ -5,11 +5,44 @@
 #'
 #' @param decimals int, the number of decimals
 #'
-#' @return a generic correlation matrix and its longer form
-#' that can be passed to other functions in this package
+#' @return a generic correlation matrix and its longer form that can be passed to other functions in this package.
+#' @export
 #'
 #' @examples
-corr_matrix <- function(df, decimals = 2) {}
+#' corr_matrix(tibble::tibble(x = 1:5, y = 2:6))
+corr_matrix <- function(df, decimals = 2) {
+    
+    variable1 <- variable2 <- correlation <- NULL
+    
+    if (!is.data.frame(df)){
+        stop("The input must be a data frame.")
+    }
+    if (!(decimals %% 1 == 0)){
+        stop("The input decimals must be a positive integer.")
+    }
+    if (!(decimals > 0)){
+        stop("The input decimals must be a positive integer.")
+    }
+    if (length(dplyr::select_if(df, is.numeric)) == 0){
+        stop("The input data frame must contain at least one numeric column.")
+    }
+    if (!(nrow(df) > 1)){
+        stop("The input dataframe should contain at least two observations.")
+    }
+    
+    corr_matrix_generic <- df |> 
+        dplyr::select_if(is.numeric) |> 
+        stats::cor(method = "pearson")
+
+    corr_matrix_longer <- corr_matrix_generic |> 
+        as.data.frame() |> 
+        tibble::rownames_to_column("variable1") |>
+        tidyr::pivot_longer(-variable1, names_to = "variable2", values_to = "correlation")|> 
+        dplyr::mutate(rounded_corr = round(correlation, digits = decimals))
+    
+    result <- list(corr_matrix_longer, corr_matrix_generic)
+}
+
 
 #' Plot rectangular data as a color-encoded Pearson correlaiton matrix.
 #'
@@ -24,23 +57,83 @@ corr_matrix <- function(df, decimals = 2) {}
 #' @export
 #' @details The inputs must be a 2-D data frame
 #' @examples
-corr_heatmap <- function(df){}
+#' corr_heatmap(mtcars[, c(1,3,4,5,6,7)])
+corr_heatmap <- function(df) {
+  corr.matrix <- corr_matrix(df)[[1]]
+  variable1 <- variable2 <- correlation <- NULL
 
-#' Returns a list containing a dataframe that includes Variance Inflation Factor (VIF) score and
+  heatmap <- ggplot2::ggplot(corr.matrix, ggplot2::aes(x = variable1, y = variable2, fill = correlation)) +
+    ggplot2::geom_tile() +
+    ggplot2::geom_text(ggplot2::aes(label = round(correlation, 2))) +
+    ggplot2::scale_fill_gradient2(low = "dodgerblue4", mid = "white", high = "sienna4", midpoint = 0) +
+    ggplot2::theme(
+      axis.title.x = ggplot2::element_blank(),
+      axis.title.y = ggplot2::element_blank(),
+      panel.background = ggplot2::element_blank()
+    )
+
+  return(heatmap)
+}
+
+
+
+#' Returns a list containing a tibble that includes Variance Inflation Factor (VIF) score and
 #' a bar chart for the VIF scores alongside the specified threshold for each explanatory variable
 #' in a linear regression model.
 #'
-#' @param x A list of the names of the explanatory variables.
+#' @param x A vector of the names of the explanatory variables.
 #' @param y A string specifying the response variable.
-#' @param df A data frame containing the data.
+#' @param df A tibble containing the data.
 #' @param thresh An integer specifying the threshold.
 #'
-#' @return A list containing a data frame for VIFs and a bar chart of the VIFs for each explanatory variable alongside the threshold.
+#' @return A list containing a tibble for VIFs and a bar chart of the VIFs for each explanatory variable alongside the threshold.
 #' @export
 #'
 #' @examples
-vif_bar_plot <- function(x, y, df, thresh){
+#' vif_bar_plot(c("Sepal.Width", "Sepal.Length"), "Petal.Width", iris, 5)
+vif_bar_plot <- function(x, y, df, thresh) {
+
+  if (!is.vector(x)) {
+    stop("x must be a vector of explanatory variables!")
+  }
+  if (!is.character(y)) {
+    stop("y must be a string!")
+  }
+  if (!is.data.frame(df)) {
+    stop("df must be a pandas data frame!")
+  }
+  if (!is.numeric(thresh)) {
+    stop("thresh must be a numeric value!")
+  }
+
+  lm <- explanatory_var <- NULL
+
+  # Data frame containing VIF scores
+  explan_var <- paste(x, collapse = " + ") |>
+    noquote()
+  response <- noquote(y)
+
+  lm_model <- lm(paste(response, "~", explan_var), data = df)
+
+  vif_score <- car::vif(lm_model)
+  vif_df <- tibble::tibble(vif_score)
+  vif_df$explanatory_var <- x
+
+
+  # Plotting the VIF scores
+  hbar_plot <- vif_df |>
+    ggplot2::ggplot(ggplot2::aes(x = vif_score, y = explanatory_var)) +
+    ggplot2::geom_bar(stat = "identity",
+                      fill = "dodgerblue3",
+                      color = "lightgrey") +
+    ggplot2::geom_vline(xintercept = thresh, color = "red", lty = 5) +
+    ggplot2::labs(x = "VIF Score",
+                  y = "Explanatory Variable",
+                  title = "VIF Scores for Each Explanatory Variable in Linear Regression")
+
+  list(vif_df, hbar_plot)
 }
+
 
 #' Multicollinearity identification function highly correlated pairs
 #' (Pearson coefficient) with VIF values exceeding the threshold.
@@ -60,6 +153,7 @@ vif_bar_plot <- function(x, y, df, thresh){
 #' a pair. This is a VIF value. Default set at 4.
 #' @export
 #' @examples
+#' col_identify(iris, c("Sepal.Width", "Petal.Length"), "Petal.Width", vif_limit = 0, corr_max = 0.3, corr_min = -0.3)
 col_identify <- function(
     df, X, y, corr_min = -0.8, corr_max = 0.8, vif_limit = 4) {
 

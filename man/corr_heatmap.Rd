@@ -20,3 +20,6 @@ corresponding colours.
 \details{
 The inputs must be a 2-D data frame
 }
+\examples{
+corr_heatmap(data)
+}

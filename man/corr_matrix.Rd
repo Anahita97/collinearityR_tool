@@ -20,3 +20,6 @@ that can be passed to other functions in this package
 Calculate the Pearson correlation coefficients for all numeric variables.
 Round the outcome to desired decimals.
 }
+\examples{
+corr_matrix(tibble(x = 1:5, y = 2:6))
+}

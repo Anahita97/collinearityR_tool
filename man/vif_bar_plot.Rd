@@ -2,26 +2,29 @@
 % Please edit documentation in R/collinearityR.R
 \name{vif_bar_plot}
 \alias{vif_bar_plot}
-\title{Returns a list containing a dataframe that includes Variance Inflation Factor (VIF) score and
+\title{Returns a list containing a tibble that includes Variance Inflation Factor (VIF) score and
 a bar chart for the VIF scores alongside the specified threshold for each explanatory variable
 in a linear regression model.}
 \usage{
 vif_bar_plot(x, y, df, thresh)
 }
 \arguments{
-\item{x}{A list of the names of the explanatory variables.}
+\item{x}{A vector of the names of the explanatory variables.}
 
 \item{y}{A string specifying the response variable.}
 
-\item{df}{A data frame containing the data.}
+\item{df}{A tibble containing the data.}
 
 \item{thresh}{An integer specifying the threshold.}
 }
 \value{
-A list containing a data frame for VIFs and a bar chart of the VIFs for each explanatory variable alongside the threshold.
+A list containing a tibble for VIFs and a bar chart of the VIFs for each explanatory variable alongside the threshold.
 }
 \description{
-Returns a list containing a dataframe that includes Variance Inflation Factor (VIF) score and
+Returns a list containing a tibble that includes Variance Inflation Factor (VIF) score and
 a bar chart for the VIF scores alongside the specified threshold for each explanatory variable
 in a linear regression model.
+}
+\examples{
+vif_bar_plot(c("exp1", "exp2", "exp3"), "response", data, 5)
 }
