@@ -36,14 +36,11 @@ test_that("The correlation matrix in its longer form is wrong", {
 
 test_that("The number of rows of longer form is wrong", {
   expect_equal(nrow(corr_matrix(data_1)[[1]]), 9)
+  expect_equal(nrow(corr_matrix(data_2)[[1]]), 1)
 })
 
 test_that("The longer form should return only one row", {
   expect_equal(corr_matrix(data_2)[[1]], result_2)
-})
-
-test_that("The number of rows of longer form is wrong", {
-  expect_equal(nrow(corr_matrix(data_2)[[1]]), 1)
 })
 
 test_that("The generic correlation matrix is wrong", {
