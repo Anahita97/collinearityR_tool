@@ -13,9 +13,9 @@ vif_bar_plot(x, y, df, thresh)
 
 \item{y}{A string specifying the response variable.}
 
-\item{thresh}{An integer specifying the threshold.}
+\item{df}{A tibble containing the data.}
 
-\item{tbl}{A tibble containing the data.}
+\item{thresh}{An integer specifying the threshold.}
 }
 \value{
 A list containing a tibble for VIFs and a bar chart of the VIFs for each explanatory variable alongside the threshold.

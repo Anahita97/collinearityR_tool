@@ -39,7 +39,7 @@ corr_heatmap <- function(df){}
 #'
 #' @param x A vector of the names of the explanatory variables.
 #' @param y A string specifying the response variable.
-#' @param tbl A tibble containing the data.
+#' @param df A tibble containing the data.
 #' @param thresh An integer specifying the threshold.
 #'
 #' @return A list containing a tibble for VIFs and a bar chart of the VIFs for each explanatory variable alongside the threshold.
