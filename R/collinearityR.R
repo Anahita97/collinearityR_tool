@@ -101,7 +101,7 @@ corr_heatmap <- function(df, color_neg = "dodgerblue4", color_pos = "sienna4") {
 #' vif_bar_plot(c("Sepal.Width", "Sepal.Length"), "Petal.Width", iris, 5)
 vif_bar_plot <- function(x, y, df, thresh) {
 
-  if (!is.vector(x)) {
+  if (!is.character(x)) {
     stop("x must be a vector of explanatory variables!")
   }
   if (!is.character(y)) {
