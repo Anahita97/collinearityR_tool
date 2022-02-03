@@ -74,7 +74,12 @@ test_that('Text layer of heatmap should use geom_text.', {
   expect_true("GeomText" %in% c(class(corr_heatmap(data_1)$layers[[2]]$geom)))
 })
 
-
+## wrong inputs
+test_that("The input color is incorrect", {
+  expect_error(corr_heatmap(data_1, "gree", "red"),
+               "The color name is not a valid color. Use colors() to check the full color list.",
+               fixed = TRUE)
+})
 
 # tests for vif_bar_plot function
 
@@ -103,7 +108,7 @@ test_that("The second element of the list should be a ggplot object.", {
 })
 
 ## dataframe tests
-  
+
 test_that("Incorrect results.", {
   expect_equal(vif[[1]] |> dplyr::mutate_if(is.numeric, round, 3),
                vif_df_example,
@@ -145,7 +150,7 @@ test_that("The threshold should be a red line.", {
 })
 
 
-  
+
 # tests for col_identify function
 
 test_that("col_identify should return a datafame", {
@@ -158,7 +163,7 @@ test_that("col_identify should return a datafame", {
     toy <- data.frame(a, b, c, y)
     toy_x <- c("a", "b", "c")
     toy_y <- c("y")
-    
+
     expect_true("data.frame" %in% c(class(
       col_identify(toy, toy_x, toy_y, vif_limit = 2, corr_max = 0.65)
   ))
