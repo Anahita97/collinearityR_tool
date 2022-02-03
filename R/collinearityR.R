@@ -52,7 +52,7 @@ corr_matrix <- function(df, decimals = 2) {
 #'
 #' @param df dataframe. 2-D dataframe.
 #' @param color_neg string. The color for the negative correlation.
-#' @param color_pos string. The color for the negative correlation.
+#' @param color_pos string. The color for the positive correlation.
 #'
 #' @usage corr_heatmap(df, color_neg, color_pos)
 #' @return The heatmap.
@@ -61,8 +61,14 @@ corr_matrix <- function(df, decimals = 2) {
 #' @examples
 #' corr_heatmap(mtcars[, c(1,3,4,5,6,7)])
 corr_heatmap <- function(df, color_neg = "dodgerblue4", color_pos = "sienna4") {
-  corr.matrix <- corr_matrix(df)[[1]]
+
   variable1 <- variable2 <- correlation <- NULL
+
+  if (!((color_neg %in% grDevices::colors()) & (color_pos %in% grDevices::colors()))){
+    stop("The color name is not a valid color. Use colors() to check the full color list.")
+  }
+
+  corr.matrix <- corr_matrix(df)[[1]]
 
   heatmap <- ggplot2::ggplot(corr.matrix, ggplot2::aes(x = variable1, y = variable2, fill = correlation)) +
     ggplot2::geom_tile() +
