@@ -52,7 +52,7 @@ corr_matrix <- function(df, decimals = 2) {
 #'
 #' @param df dataframe. 2-D dataframe.
 #'
-#' @usage corr_heatmap(df)
+#' @usage corr_heatmap(df, color_low, color_high)
 #' @return The heatmap.
 #' @export
 #' @details The inputs must be a 2-D data frame
