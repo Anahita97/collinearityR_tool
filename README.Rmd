@@ -16,6 +16,8 @@ knitr::opts_chunk$set(
 # collinearityR
 
 <!-- badges: start -->
+[![R-CMD-check](https://github.com/UBC-MDS/collinearityR_tool/workflows/R-CMD-check/badge.svg)](https://github.com/UBC-MDS/collinearityR_tool/actions)
+[![codecov](https://github.com/UBC-MDS/collinearityR_tool/branch/master/graph/badge.svg)](https://app.codecov.io/gh/UBC-MDS/collinearityR_tool)
 <!-- badges: end -->
 
 Identify multicollinearity issues by correlation, VIF, and visualizations. This package is designed for beginners of R who want to identify multicollinearity issues by applying a simple function. It automates the process of building a longer form of correlation matrix, creating correlation heat map and identifying pairwise highly correlated variables. A python version of package is also in the progress of development.
