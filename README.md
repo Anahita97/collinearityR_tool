@@ -21,10 +21,10 @@ development.
 
 The following four functions are in the collinearityR package: 
 
--`corr_matrix`: A function that returns a generic and the longer form of
+- `corr_matrix`: A function that returns a generic and the longer form of
 a correlation matrix for all numerical variables in a data frame. 
 
--`corr_heatmap`: A function that returns a correlation heatmap given a
+- `corr_heatmap`: A function that returns a correlation heatmap given a
 dataframe. 
 
 - `vif_bar_plot`: A function that returns a list containing a
