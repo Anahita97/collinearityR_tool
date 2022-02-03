@@ -4,10 +4,14 @@
 \alias{corr_heatmap}
 \title{Plot rectangular data as a color-encoded Pearson correlaiton matrix.}
 \usage{
-corr_heatmap(df)
+corr_heatmap(df, color_neg, color_pos)
 }
 \arguments{
 \item{df}{dataframe. 2-D dataframe.}
+
+\item{color_neg}{string. The color for the negative correlation.}
+
+\item{color_pos}{string. The color for the negative correlation.}
 }
 \value{
 The heatmap.
