@@ -90,7 +90,7 @@ vif_df_example <- tibble::tibble(vif_score = c(1.014, 1.014),
 
 ## wrong inputs
 test_that("Wrong input data type.", {
-  expect_error(vif_bar_plot(5, "Petal.Width", iris, 5))
+  expect_error(vif_bar_plot(iris, "Petal.Width", iris, 5))
   expect_error(vif_bar_plot(c("Sepal.Width", "Sepal.Length"), list("Petal.Width"), iris, 5))
   expect_error(vif_bar_plot(c("Sepal.Width", "Sepal.Length"), "Petal.Width", "iris", 5))
   expect_error(vif_bar_plot(c("Sepal.Width", "Sepal.Length"), "Petal.Width", iris, "5"))
