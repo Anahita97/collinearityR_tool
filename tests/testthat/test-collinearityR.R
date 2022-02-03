@@ -174,6 +174,9 @@ test_that('function should throw an error if the arguments are the wrong type', 
     fake_df <- c("apples", "bananas")
     fake_exp <- 100
     fake_resp <- c(100, 200)
+    fake_vif <- c("abc")
+    fake_min <- c("abc", "def")
+    fake_max <- c("abc")
 
     a <- c(1, 2, 9, 10, 10, 9)
     b <- c(2, 10, 16, 4, 7, 11)
@@ -187,6 +190,12 @@ test_that('function should throw an error if the arguments are the wrong type', 
     expect_error(col_identify(fake_df, toy_x, toy_y))
     expect_error(col_identify(toy, fake_exp, toy_y))
     expect_error(col_identify(toy, toy_x, fake_resp))
+
+    expect_error(col_identify(toy, toy_x, toy_y, vif_limit = fake_vif))
+    expect_error(col_identify(toy, toy_x, toy_y, corr_max = fake_max))
+    expect_error(col_identify(toy, toy_x, toy_y, corr_min = fake_min))
+
+
 })
 test_that("col_identify should return correct matches", {
 
