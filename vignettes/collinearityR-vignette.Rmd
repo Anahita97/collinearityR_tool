@@ -1,0 +1,75 @@
+---
+title: "collinearityR-vignette"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{collinearityR-vignette}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+Identify multicollinearity issues by correlation, VIF, and visualizations. The collinearityR package is designed for beginners of R who want to identify multicollinearity issues by applying a simple function. It automates the process of building a proper correlation matrix, creating correlation heat map and identifying pairwise highly correlated variables.
+
+This document introduces you to collinearityR's basic set of tools and demonstrates how to apply them to data frames.
+
+## Data: mpg
+
+We will use the data set `mpg` from the `ggplot2` package to explore the multicollinearity tools of collinearityR. This dataset contains 234 observations and 11 variables.
+
+```{r}
+data <- ggplot2::mpg
+dim(data)
+data
+```
+
+## Correlation Matrix and its Longer Form
+
+`corr_matrix()` allows you to calculate the Pearson correlation coefficients for all numeric variables. Moreover, you can round the outcome to the desired decimals. The output is a generic correlation matrix and its longer form, so you can decide which form you can use to directly plot a heatmap without further data manipulation.
+
+For example, we can calculate the correlation matrix and its longer form using all the numerical columns in `mpg`.
+
+```{r setup}
+library(collinearityR)
+
+corr_matrix(data, decimals = 2)[1]
+corr_matrix(data, decimals = 2)[2]
+```
+
+## Correlation Heatmap
+
+`corr_heatmap()` allows you to visualize the correlations by making a heatmap. This function plots data as a color-encoded Pearson correlation matrix using the longer form output returned from `corr_matrix()`. You can individually specify the colors for negative and positive correlations.
+
+For example, we can plot a heatmap of all the numerical columns in `mpg`.
+
+```{r, fig.width = 5, fig.height = 4, fig.align = 'center'}
+corr_heatmap(data)
+```
+
+## Data Frame and Bar Chart of Variance Inflation Factors (VIF)
+
+`vif_bar_plot()` allows you to perform linear regression, calculate the VIF scores and plot the VIF scores using a single function. The output is a list containing a tibble that includes VIF scores and a bar chart for the VIF scores alongside the specified threshold for each explanatory variable in a linear regression model. The visualization of the VIF scores alongside an adjustable thershold helps with the quick identification of the multicollinear variables.
+
+For example we can calculate and visualize the VIF scores in a linear regression using some of the columns in `mpg`.
+
+```{r, fig.width = 6, fig.height = 3, fig.align = 'center'}
+vif_bar_plot(c("displ", "cyl", "hwy"), "year", data, 5)[[1]]
+vif_bar_plot(c("displ", "cyl", "hwy"), "year", data, 5)[[2]]
+```
+
+## Multicollinearity Identification based on Pearson Coefficient and VIF Scores
+
+`col_identify()` allows you to eliminate explanatory variables in a linear regression model by incorporating both Pearson's coefficient and VIF scores. The output is a data frame containing Pearson's coefficient, VIF scores and explanatory variables suggested for elimination. If no multicollinearity is detected, the output is an empty data frame. The function employs `corr_matrix()` and `vif_bar_plot()` in the process.
+
+For Example, we can incorporate both Pearson's coefficient and VIF scores in a linear regression model using some of the columns in `mpg`.
+
+```{r}
+col_identify(data, c("displ", "cyl", "hwy", "cty"), "year",
+             corr_min = -0.8, corr_max = 0.8,
+             vif_limit = 5)
+```
