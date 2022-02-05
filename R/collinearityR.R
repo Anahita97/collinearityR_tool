@@ -1,5 +1,6 @@
-#' Calculate the Pearson correlation coefficients for all numeric variables.
-#' Round the outcome to desired decimals.
+#' Calculates Pearson correlation coefficients for all numeric variables.
+#' Rounds the outcome to desired decimals. Outputs a matrix or a dataframe
+#' (longer matrix)
 #'
 #' @param df tibble, the input dataframe
 #'
@@ -44,7 +45,8 @@ corr_matrix <- function(df, decimals = 2) {
 }
 
 
-#' Plot rectangular data as a color-encoded Pearson correlaiton matrix.
+#' Plots the dataframe as a color-encoded Pearson correlation matrix 
+#' of explanatory variables.
 #'
 #' @description The rows and the columns contain variable names, while
 #' the heatmap tiles contain Pearson correlation coefficient and
@@ -143,11 +145,13 @@ vif_bar_plot <- function(x, y, df, thresh) {
 }
 
 
-#' Multicollinearity identification function highly correlated pairs
-#' (Pearson coefficient) with VIF values exceeding the threshold.
+#' Identifies multicollinearity using
+#' Pearson's coefficient and suggests the variable
+#' with the highest VIF score out of the correlated pair 
+#' for elimination.
 #'
-#' This function returns a DataFrame containing Pearson's coefficient,
-#' VIFF with explanatory variables suggested for elimination.
+#' Returns a DataFrame containing Pearson's coefficient,
+#' VIF with explanatory variables suggested for elimination.
 #' An empty dataframe means no multicollinearity detected.
 #'
 #' @param df An input dataframe

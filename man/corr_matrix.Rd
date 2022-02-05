@@ -2,8 +2,9 @@
 % Please edit documentation in R/collinearityR.R
 \name{corr_matrix}
 \alias{corr_matrix}
-\title{Calculate the Pearson correlation coefficients for all numeric variables.
-Round the outcome to desired decimals.}
+\title{Calculates Pearson correlation coefficients for all numeric variables.
+Rounds the outcome to desired decimals. Outputs a matrix or a dataframe
+(longer matrix)}
 \usage{
 corr_matrix(df, decimals = 2)
 }
@@ -16,8 +17,9 @@ corr_matrix(df, decimals = 2)
 a generic correlation matrix and its longer form that can be passed to other functions in this package.
 }
 \description{
-Calculate the Pearson correlation coefficients for all numeric variables.
-Round the outcome to desired decimals.
+Calculates Pearson correlation coefficients for all numeric variables.
+Rounds the outcome to desired decimals. Outputs a matrix or a dataframe
+(longer matrix)
 }
 \examples{
 corr_matrix(tibble::tibble(x = 1:5, y = 2:6))
