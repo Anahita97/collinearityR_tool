@@ -59,13 +59,6 @@ documentation on `VIF` function can be found
 
 ## Installation
 
-You can install the released version of collinearityR from
-[CRAN](https://CRAN.R-project.org) with:
-
-``` r
-install.packages("collinearityR")
-```
-
 And the development version from [GitHub](https://github.com/) with:
 
 ``` r
@@ -75,9 +68,5 @@ devtools::install_github("UBC-MDS/collinearityR_tool")
 
 ## Usage
 
-This is a basic example which shows you how to solve a common problem:
+[This](https://ubc-mds.github.io/collinearityR_tool/articles/collinearityR-vignette.html) is a basic example which shows you how to apply this package to a data frame.
 
-``` r
-library(collinearityR)
-## basic example code
-```
