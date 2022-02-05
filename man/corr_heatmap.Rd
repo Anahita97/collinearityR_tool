@@ -2,7 +2,8 @@
 % Please edit documentation in R/collinearityR.R
 \name{corr_heatmap}
 \alias{corr_heatmap}
-\title{Plot rectangular data as a color-encoded Pearson correlaiton matrix.}
+\title{Plots the dataframe as a color-encoded Pearson correlation matrix
+of explanatory variables.}
 \usage{
 corr_heatmap(df, color_neg, color_pos)
 }
@@ -11,7 +12,7 @@ corr_heatmap(df, color_neg, color_pos)
 
 \item{color_neg}{string. The color for the negative correlation.}
 
-\item{color_pos}{string. The color for the negative correlation.}
+\item{color_pos}{string. The color for the positive correlation.}
 }
 \value{
 The heatmap.
